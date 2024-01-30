@@ -5,7 +5,7 @@
 #include <string>
 
 void resizeText(){
-    
+
 }
 
 int main() {

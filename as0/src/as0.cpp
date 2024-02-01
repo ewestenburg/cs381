@@ -31,6 +31,7 @@ void SimpleWindow::Update() {
     if (IsWindowResized()) {
         ResizeText();
     }
+    AnimateText();
 }
 
 void SimpleWindow::Draw() {
@@ -38,7 +39,7 @@ void SimpleWindow::Draw() {
     {
         window.ClearBackground(RAYWHITE);
 
-        textColor.DrawText(displayText.c_str(), textPosition.x, textPosition.y, textSize);
+        textColor.DrawText(displayText.c_str(), textPosition.x, textPosition.y + textOffset, textSize);
     }
     window.EndDrawing();
 }
@@ -52,6 +53,21 @@ void SimpleWindow::ResizeText() {
     textPosition.x = static_cast<float>(window.GetWidth() / 2 - textWidth / 2);
     textPosition.y = static_cast<float>(window.GetHeight() / 2 - textHeight / 2);
 }
+
+void SimpleWindow::AnimateText() {
+    // moves text up and down
+    textOffset += 1.0f;
+
+    if (textOffset > 20.0f) {
+        textOffset = -20.0f;
+    }
+
+    // changes color
+    float hue = fmod(GetTime() * 100, 360.0f);
+    textColor = ColorFromHSV(hue, 0.8f, 0.8f);
+    textColor2 = ColorFromHSV(hue + 180.0f, 0.8f, 0.8f);
+}
+
 
 int main() {
     SimpleWindow simplewindow;

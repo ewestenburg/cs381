@@ -16,6 +16,7 @@ private:
     void Update();
     void Draw();
     void ResizeText();
+    void AnimateText();
 
     raylib::Window window;
     std::string windowTitle;
@@ -24,6 +25,7 @@ private:
 
     std::string displayText;
     int textSize;
+    float textOffset;
     raylib::Vector2 textPosition;
 };
 #endif

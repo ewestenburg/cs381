@@ -26,5 +26,4 @@ private:
     int textSize;
     raylib::Vector2 textPosition;
 };
-
 #endif

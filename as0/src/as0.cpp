@@ -17,8 +17,7 @@ SimpleWindow::~SimpleWindow() {
 void SimpleWindow::Initialize() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SetTargetFPS(60);
-    textPosition.x = window.GetWidth() / 2;
-    textPosition.y = window.GetHeight() / 2;
+    ResizeText();
 }
 
 void SimpleWindow::Run() {
@@ -29,7 +28,9 @@ void SimpleWindow::Run() {
 }
 
 void SimpleWindow::Update() {
-    // Update logic goes here
+    if (IsWindowResized()) {
+        ResizeText();
+    }
 }
 
 void SimpleWindow::Draw() {
@@ -43,13 +44,13 @@ void SimpleWindow::Draw() {
 }
 
 void SimpleWindow::ResizeText() {
-    // Measure text width and height
+    // text width and height
     float textWidth = MeasureText(displayText.c_str(), textSize);
     float textHeight = static_cast<float>(textSize);
 
-    // Center text position based on window size
-    //textPosition.x = static_cast<float>(window.GetScreenWidth() / 2 - textWidth / 2);
-    //textPosition.y = static_cast<float>(window.GetScreenHeight() / 2 - textHeight / 2);
+    // center text 
+    textPosition.x = static_cast<float>(window.GetWidth() / 2 - textWidth / 2);
+    textPosition.y = static_cast<float>(window.GetHeight() / 2 - textHeight / 2);
 }
 
 int main() {

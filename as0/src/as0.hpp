@@ -4,10 +4,10 @@
 #include "raylib-cpp.hpp"
 #include <string>
 
-class Assignment {
+class SimpleWindow{
 public:
-    Assignment();
-    ~Assignment();
+    SimpleWindow();
+    ~SimpleWindow();
 
     void Run();
 
@@ -17,16 +17,14 @@ private:
     void Draw();
     void ResizeText();
 
-    static void ResizeCallback(int width, int height);
-
     raylib::Window window;
     std::string windowTitle;
-    bool resizable;
     raylib::Color textColor;
+    raylib::Color textColor2;
 
     std::string displayText;
     int textSize;
     raylib::Vector2 textPosition;
 };
 
-#endif // AS0_HPP
+#endif

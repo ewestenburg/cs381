@@ -40,4 +40,5 @@ CMakeFiles/as0.dir/src/as0.cpp.o: ../raylib-cpp/include/raylib.hpp
 CMakeFiles/as0.dir/src/as0.cpp.o: ../raylib-cpp/include/raymath.hpp
 CMakeFiles/as0.dir/src/as0.cpp.o: ../raylib-cpp/raylib/src/raymath.h
 CMakeFiles/as0.dir/src/as0.cpp.o: ../src/as0.cpp
+CMakeFiles/as0.dir/src/as0.cpp.o: ../src/as0.hpp
 

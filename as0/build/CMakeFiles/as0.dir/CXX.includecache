@@ -425,6 +425,14 @@ math.h
 -
 
 /home/student/cs381/as0/src/as0.cpp
+as0.hpp
+/home/student/cs381/as0/src/as0.hpp
+iostream
+-
+
+/home/student/cs381/as0/src/as0.hpp
 raylib-cpp.hpp
 /home/student/cs381/as0/src/raylib-cpp.hpp
+string
+-
 

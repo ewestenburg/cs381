@@ -9,10 +9,15 @@ Move into CS381 repository
 - cd cs381
 Initialize and Update the Submodules
 - git submodule init
-- git submodule update
+- git submodule update --init --recursive
 
 **How to compile code:**
-Move into the build folder
+Move into AS0
+- cd as0
+Delete the build folder and recreate it
+- rm -r build
+- mkdir build
+Move into build folder
 - cd build
 Run cmake and make 
 - cmake ..

@@ -15,7 +15,6 @@ SimpleWindow::~SimpleWindow() {
 }
 
 void SimpleWindow::Initialize() {
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SetTargetFPS(60);
     ResizeText();
 }
@@ -70,6 +69,7 @@ void SimpleWindow::AnimateText() {
 
 
 int main() {
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SimpleWindow simplewindow;
     simplewindow.Run();
 

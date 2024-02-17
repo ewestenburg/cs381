@@ -12,8 +12,8 @@ Initialize and Update the Submodules
 - git submodule update --init --recursive
 
 **How to compile code:**
-Move into AS0
-- cd as0
+Move into AS1
+- cd as1
 Delete the build folder and recreate it
 - rm -r build
 - mkdir build
@@ -24,8 +24,8 @@ Run cmake and make
 - make
 
 **How to run code:**
-After compile, there will be a resulting executable that can be run titled as0
-- ./as0
+After compile, there will be a resulting executable that can be run titled as1
+- ./as1
 
 **How to enumerate controls:**
 N/A

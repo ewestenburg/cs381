@@ -5,14 +5,16 @@
 #include "raymath.h"
 #include <thread>
 
-// Function to translate models using a lambda before drawing
 void TranslateAndDraw(raylib::Model& model, const raylib::Vector3& position, const raylib::Vector3& scale, const raylib::Vector3& axis, const float& angle, const raylib::Color& color) {
     model.transform = raylib::Transform(model.transform).Translate(position);
     model.transform = raylib::Transform(model.transform).Scale(scale.x, scale.y, scale.z);
     model.transform = raylib::Transform(model.transform).Rotate(axis, angle);
     DrawModel(model, position, 1.0f, color);
 
+    // Draw bounding box
     BoundingBox box = model.GetBoundingBox();
+    box.min = Vector3Transform(box.min, model.transform);
+    box.max = Vector3Transform(box.max, model.transform);
     DrawBoundingBox(box, BLACK);
 }
 
@@ -47,7 +49,7 @@ int main() {
 
         BeginMode3D(camera);
 
-        // Draw airplanes and ships with different positions, scales, and rotations
+        // Draw airplanes and ships
         TranslateAndDraw(plane, {0, 0, 0}, {1, 1, 1}, {0, 0, 0}, 0, {255, 255, 255, 255});  // Default parameters
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         TranslateAndDraw(plane, {-100, 100, 0}, {1, -1, 1}, {0, 1, 0}, raylib::Degree(180), {255, 255, 255, 255});

@@ -315,6 +315,33 @@ src/as2.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/as2.dir/build.make CMakeFiles/as2.dir/src/as2.cpp.s
 .PHONY : src/as2.cpp.s
 
+src/skybox.o: src/skybox.cpp.o
+
+.PHONY : src/skybox.o
+
+# target to build an object file
+src/skybox.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as2.dir/build.make CMakeFiles/as2.dir/src/skybox.cpp.o
+.PHONY : src/skybox.cpp.o
+
+src/skybox.i: src/skybox.cpp.i
+
+.PHONY : src/skybox.i
+
+# target to preprocess a source file
+src/skybox.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as2.dir/build.make CMakeFiles/as2.dir/src/skybox.cpp.i
+.PHONY : src/skybox.cpp.i
+
+src/skybox.s: src/skybox.cpp.s
+
+.PHONY : src/skybox.s
+
+# target to generate assembly for a file
+src/skybox.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as2.dir/build.make CMakeFiles/as2.dir/src/skybox.cpp.s
+.PHONY : src/skybox.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -339,6 +366,9 @@ help:
 	@echo "... src/as2.o"
 	@echo "... src/as2.i"
 	@echo "... src/as2.s"
+	@echo "... src/skybox.o"
+	@echo "... src/skybox.i"
+	@echo "... src/skybox.s"
 .PHONY : help
 
 

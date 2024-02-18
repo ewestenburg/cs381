@@ -1,4 +1,5 @@
 #include "raylib-cpp.hpp"
+#include "skybox.hpp"
 
 class Ground {
 public:
@@ -19,6 +20,8 @@ public:
 
     raylib::Vector3 position;
     raylib::Vector3 velocity;
+
+    raylib::Model plane;
 };
 
 Ground& Ground::Init() {
@@ -49,6 +52,9 @@ Ground& Ground::Draw() {
 }
 
 Airplane& Airplane::Init() {
+    plane = LoadModel("381Resources/meshes/PolyPlane.glb");
+    plane.transform = raylib::Transform(plane.transform).Scale(3, 3, 3);
+
     position = raylib::Vector3{ 0.0f, 0.0f, 0.0f };
     velocity = raylib::Vector3{ 0.0f, 0.0f, 0.0f };
     return *this;
@@ -62,7 +68,7 @@ Airplane& Airplane::Update(float deltaTime) {
 }
 
 Airplane& Airplane::Draw() {
-    DrawCube(position, 50.0f, 50.0f, 50.0f, RED);  // Draw a simple placeholder cube for the airplane
+    DrawModel(plane, position, 1.0f, RED);
     return *this;
 }
 
@@ -74,7 +80,7 @@ int main() {
 
     raylib::Camera3D camera;
     camera.target = raylib::Vector3(0, 0, 0);
-    camera.position = raylib::Vector3(0, 120, -500);
+    camera.position = raylib::Vector3(0, 200, -750);
     camera.up = (raylib::Vector3){ 0.0f, 1.0f, 0.0f };
     camera.fovy = 45;
     camera.projection = CAMERA_PERSPECTIVE;
@@ -82,8 +88,10 @@ int main() {
     DisableCursor();
     SetTargetFPS(60);
 
+    cs381::SkyBox skybox("381Resources/textures/skybox.png");
+
     Ground ground;
-    ground.Init().LoadTextures("/home/ashton/cs381/as2/381Resources/textures/runway.jpg");
+    ground.Init().LoadTextures("381Resources/textures/runway.jpg");
 
     Airplane airplane;
     airplane.Init();
@@ -92,24 +100,32 @@ int main() {
     while (!WindowShouldClose()) {
         // Update
         float deltaTime = GetFrameTime();
-        UpdateCamera(&camera, CAMERA_FREE);
 
-        // Handle airplane controls
-        if (IsKeyDown(KEY_W)) airplane.velocity.z += 5.0f;
-        if (IsKeyDown(KEY_S)) airplane.velocity.z -= 5.0f;
-        if (IsKeyDown(KEY_A)) airplane.velocity.x -= 5.0f;
-        if (IsKeyDown(KEY_D)) airplane.velocity.x += 5.0f;
-        if (IsKeyDown(KEY_Q)) airplane.velocity.y += 5.0f;
-        if (IsKeyDown(KEY_E)) airplane.velocity.y -= 5.0f;
+        // Check if the window is focused
+        if (IsWindowFocused()) {
+            // Handle airplane controls
+            if (IsKeyDown(KEY_W)) airplane.velocity.z += 5.0f;
+            if (IsKeyDown(KEY_S)) airplane.velocity.z -= 5.0f;
+            if (IsKeyDown(KEY_D)) airplane.velocity.x -= 5.0f;
+            if (IsKeyDown(KEY_A)) airplane.velocity.x += 5.0f;
+            if (IsKeyDown(KEY_Q)) airplane.velocity.y += 5.0f;
+            if (IsKeyDown(KEY_E)) airplane.velocity.y -= 5.0f;
 
-        // Update airplane physics
-        airplane.Update(deltaTime);
+            // Update airplane physics
+            airplane.Update(deltaTime);
+        } 
+
+        //Camera held still
+        //UpdateCamera(&camera, CAMERA_FREE);
 
         // Draw
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
         BeginMode3D(camera);
+
+        // Draw the skybox
+        skybox.Draw();
 
         // Draw the ground
         ground.Draw();

@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/as2.dir/src/as2.cpp.o"
+  "CMakeFiles/as2.dir/src/skybox.cpp.o"
   "as2"
   "as2.pdb"
 )

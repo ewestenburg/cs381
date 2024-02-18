@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/ashton/cs381/as2/src/as2.cpp" "/home/ashton/cs381/as2/build/CMakeFiles/as2.dir/src/as2.cpp.o"
+  "/home/ashton/cs381/as2/src/skybox.cpp" "/home/ashton/cs381/as2/build/CMakeFiles/as2.dir/src/skybox.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

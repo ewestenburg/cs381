@@ -427,4 +427,10 @@ math.h
 /home/ashton/cs381/as2/src/as2.cpp
 raylib-cpp.hpp
 /home/ashton/cs381/as2/src/raylib-cpp.hpp
+skybox.hpp
+/home/ashton/cs381/as2/src/skybox.hpp
+
+/home/ashton/cs381/as2/src/skybox.hpp
+raylib-cpp.hpp
+/home/ashton/cs381/as2/src/raylib-cpp.hpp
 

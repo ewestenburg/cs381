@@ -9,4 +9,7 @@
 	url = https://github.com/joshuadahlunr/raylib-cpp.git	
 [submodule "as3/raylib-cpp"]
 	path = as3/raylib-cpp
-	url = https://github.com/joshuadahlunr/raylib-cpp.git	
+	url = https://github.com/joshuadahlunr/raylib-cpp.git
+[submodule "as5/raylib-cpp"]
+	path = as5/raylib-cpp
+	url = https://github.com/joshuadahlunr/raylib-cpp.git

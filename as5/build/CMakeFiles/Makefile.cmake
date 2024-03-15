@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
   "../381Resources/audio/crowd.wav"
+  "../381Resources/audio/damn.wav"
   "../381Resources/audio/ping.wav"
   "../381Resources/audio/price-of-freedom.mp3"
   "../CMakeLists.txt"
@@ -96,6 +97,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "381Resources/audio/ping.wav"
   "381Resources/audio/crowd.wav"
   "381Resources/audio/price-of-freedom.mp3"
+  "381Resources/audio/damn.wav"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   "raylib-cpp/CMakeFiles/CMakeDirectoryInformation.cmake"
   "raylib-cpp/include/CMakeFiles/CMakeDirectoryInformation.cmake"

@@ -5,8 +5,10 @@ CS 381 Assignment 5
 
 Clone into the repository
 - git clone --recursive https://github.com/ewestenburg/cs381.git
+
 Move into CS381 repository
 - cd cs381
+
 Initialize and Update the Submodules
 - git submodule init
 - git submodule update --init --recursive
@@ -15,13 +17,17 @@ Initialize and Update the Submodules
 
 Move into AS5
 - cd as5
+
 Delete the build folder and recreate it
 - rm -r build
 - mkdir build
+
 Copy 381Resources folder into build
 - cp -r 381Resources build
+
 Move into build folder
 - cd build
+  
 Run cmake and make 
 - cmake ..
 - make

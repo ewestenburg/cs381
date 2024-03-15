@@ -36,3 +36,5 @@ After compile, there will be a resulting executable that can be run titled as5
     - Press Up and Down arrows to adjust sound volume
     - Press TAB to switch between dials
 - Press Space to play "Ping"
+- Press "Try this" button to play sound effect from the internet
+- Press "Change Theme" button to change the GUI theme

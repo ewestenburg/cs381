@@ -198,17 +198,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named as6
+# Target rules for targets named as8
 
 # Build rule for target.
-as6: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 as6
-.PHONY : as6
+as8: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 as8
+.PHONY : as8
 
 # fast build rule for target.
-as6/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/as6.dir/build.make CMakeFiles/as6.dir/build
-.PHONY : as6/fast
+as8/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as8.dir/build.make CMakeFiles/as8.dir/build
+.PHONY : as8/fast
 
 #=============================================================================
 # Target rules for targets named raylib
@@ -294,7 +294,7 @@ src/as6.o: src/as6.cpp.o
 
 # target to build an object file
 src/as6.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/as6.dir/build.make CMakeFiles/as6.dir/src/as6.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as8.dir/build.make CMakeFiles/as8.dir/src/as6.cpp.o
 .PHONY : src/as6.cpp.o
 
 src/as6.i: src/as6.cpp.i
@@ -303,7 +303,7 @@ src/as6.i: src/as6.cpp.i
 
 # target to preprocess a source file
 src/as6.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/as6.dir/build.make CMakeFiles/as6.dir/src/as6.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as8.dir/build.make CMakeFiles/as8.dir/src/as6.cpp.i
 .PHONY : src/as6.cpp.i
 
 src/as6.s: src/as6.cpp.s
@@ -312,7 +312,7 @@ src/as6.s: src/as6.cpp.s
 
 # target to generate assembly for a file
 src/as6.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/as6.dir/build.make CMakeFiles/as6.dir/src/as6.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as8.dir/build.make CMakeFiles/as8.dir/src/as6.cpp.s
 .PHONY : src/as6.cpp.s
 
 src/skybox.o: src/skybox.cpp.o
@@ -321,7 +321,7 @@ src/skybox.o: src/skybox.cpp.o
 
 # target to build an object file
 src/skybox.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/as6.dir/build.make CMakeFiles/as6.dir/src/skybox.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as8.dir/build.make CMakeFiles/as8.dir/src/skybox.cpp.o
 .PHONY : src/skybox.cpp.o
 
 src/skybox.i: src/skybox.cpp.i
@@ -330,7 +330,7 @@ src/skybox.i: src/skybox.cpp.i
 
 # target to preprocess a source file
 src/skybox.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/as6.dir/build.make CMakeFiles/as6.dir/src/skybox.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as8.dir/build.make CMakeFiles/as8.dir/src/skybox.cpp.i
 .PHONY : src/skybox.cpp.i
 
 src/skybox.s: src/skybox.cpp.s
@@ -339,7 +339,7 @@ src/skybox.s: src/skybox.cpp.s
 
 # target to generate assembly for a file
 src/skybox.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/as6.dir/build.make CMakeFiles/as6.dir/src/skybox.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as8.dir/build.make CMakeFiles/as8.dir/src/skybox.cpp.s
 .PHONY : src/skybox.cpp.s
 
 # Help Target
@@ -357,7 +357,7 @@ help:
 	@echo "... package_source"
 	@echo "... rebuild_cache"
 	@echo "... update_mappings"
-	@echo "... as6"
+	@echo "... as8"
 	@echo "... buffered-raylib"
 	@echo "... glfw"
 	@echo "... libfastsignals"

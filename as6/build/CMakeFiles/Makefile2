@@ -72,7 +72,7 @@ CMAKE_BINARY_DIR = /home/ashton/cs381/as6/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/as6.dir/all
+all: CMakeFiles/as8.dir/all
 all: raylib-cpp/all
 
 .PHONY : all
@@ -83,7 +83,7 @@ preinstall: raylib-cpp/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/as6.dir/clean
+clean: CMakeFiles/as8.dir/clean
 clean: raylib-cpp/clean
 
 .PHONY : clean
@@ -285,32 +285,32 @@ raylib-cpp/raylib/raylib/external/glfw/src/clean: raylib-cpp/raylib/raylib/exter
 .PHONY : raylib-cpp/raylib/raylib/external/glfw/src/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/as6.dir
+# Target rules for target CMakeFiles/as8.dir
 
 # All Build rule for target.
-CMakeFiles/as6.dir/all: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/all
-CMakeFiles/as6.dir/all: raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/as6.dir/build.make CMakeFiles/as6.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/as6.dir/build.make CMakeFiles/as6.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ashton/cs381/as6/build/CMakeFiles --progress-num=1,2,3 "Built target as6"
-.PHONY : CMakeFiles/as6.dir/all
+CMakeFiles/as8.dir/all: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/all
+CMakeFiles/as8.dir/all: raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as8.dir/build.make CMakeFiles/as8.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as8.dir/build.make CMakeFiles/as8.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ashton/cs381/as6/build/CMakeFiles --progress-num=1,2,3 "Built target as8"
+.PHONY : CMakeFiles/as8.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/as6.dir/rule: cmake_check_build_system
+CMakeFiles/as8.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ashton/cs381/as6/build/CMakeFiles 35
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/as6.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/as8.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ashton/cs381/as6/build/CMakeFiles 0
-.PHONY : CMakeFiles/as6.dir/rule
+.PHONY : CMakeFiles/as8.dir/rule
 
 # Convenience name for target.
-as6: CMakeFiles/as6.dir/rule
+as8: CMakeFiles/as8.dir/rule
 
-.PHONY : as6
+.PHONY : as8
 
 # clean rule for target.
-CMakeFiles/as6.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/as6.dir/build.make CMakeFiles/as6.dir/clean
-.PHONY : CMakeFiles/as6.dir/clean
+CMakeFiles/as8.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/as8.dir/build.make CMakeFiles/as8.dir/clean
+.PHONY : CMakeFiles/as8.dir/clean
 
 #=============================================================================
 # Target rules for target raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir

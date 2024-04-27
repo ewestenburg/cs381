@@ -6,7 +6,7 @@
 /home/ashton/cs381/as6/build/CMakeFiles/list_install_components.dir
 /home/ashton/cs381/as6/build/CMakeFiles/rebuild_cache.dir
 /home/ashton/cs381/as6/build/CMakeFiles/package.dir
-/home/ashton/cs381/as6/build/CMakeFiles/as6.dir
+/home/ashton/cs381/as6/build/CMakeFiles/as8.dir
 /home/ashton/cs381/as6/build/raylib-cpp/CMakeFiles/install/strip.dir
 /home/ashton/cs381/as6/build/raylib-cpp/CMakeFiles/install/local.dir
 /home/ashton/cs381/as6/build/raylib-cpp/CMakeFiles/edit_cache.dir

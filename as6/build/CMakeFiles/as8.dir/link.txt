@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/as8.dir/src/as6.cpp.o CMakeFiles/as8.dir/src/skybox.cpp.o -o as8  raylib-cpp/raylib/raylib/libraylib.a -lm -latomic -lpthread /usr/lib/x86_64-linux-gnu/libOpenGL.so /usr/lib/x86_64-linux-gnu/libGLX.so /usr/lib/x86_64-linux-gnu/libGLU.so raylib-cpp/raylib/raylib/external/glfw/src/libglfw3.a -lpthread /usr/lib/x86_64-linux-gnu/librt.so -lm -ldl 

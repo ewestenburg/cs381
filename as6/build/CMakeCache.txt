@@ -210,7 +210,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=as6
+CMAKE_PROJECT_NAME:STATIC=as8
 
 //Value Computed by CMake
 CMAKE_PROJECT_VERSION:STATIC=4.5.0
@@ -652,6 +652,12 @@ as6_BINARY_DIR:STATIC=/home/ashton/cs381/as6/build
 
 //Value Computed by CMake
 as6_SOURCE_DIR:STATIC=/home/ashton/cs381/as6
+
+//Value Computed by CMake
+as8_BINARY_DIR:STATIC=/home/ashton/cs381/as6/build
+
+//Value Computed by CMake
+as8_SOURCE_DIR:STATIC=/home/ashton/cs381/as6
 
 //Path to a library.
 pkgcfg_lib_PKG_FONTCONFIG_fontconfig:FILEPATH=/usr/lib/x86_64-linux-gnu/libfontconfig.so

@@ -218,3 +218,16 @@ int main() {
 
     return 0;
 }
+int main() {
+    Scene scene;
+    scene.Init();
+
+    while (!WindowShouldClose()) {
+        float deltaTime = GetFrameTime();
+
+        scene.Update(deltaTime);
+        scene.Draw();
+    }
+
+    return 0;
+}

@@ -13,7 +13,8 @@ configure_file(381Resources/meshes/ddg51.glb 381Resources/meshes/ddg51.glb COPYO
 configure_file(381Resources/meshes/OilTanker.glb 381Resources/meshes/OilTanker.glb COPYONLY)
 configure_file(381Resources/meshes/SmitHouston_Tug.glb 381Resources/meshes/SmitHouston_Tug.glb COPYONLY)
 configure_file(381Resources/textures/skybox.png 381Resources/textures/skybox.png COPYONLY)
-configure_file(381Resources/textures/grass.jpg 381Resources/textures/sgrass.jpg COPYONLY)
+configure_file(381Resources/textures/grass.jpg 381Resources/textures/grass.jpg COPYONLY)
+configure_file(381Resources/textures/water.jpg 381Resources/textures/water.jpg COPYONLY)
 
 include(includeable.cmake)
 

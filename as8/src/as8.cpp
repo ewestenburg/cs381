@@ -23,10 +23,11 @@ struct TransformComponent {
 };
 
 struct Kinematics {
-    raylib::Vector3 velocity;
-    float speed;
+    raylib::Vector3 velocity = {0.0, 0.0, 0.0};
+    float speed = 0.0;
     float maxSpeed;
     float acceleration;
+	bool shouldAccelerate = false;
 };
 
 struct RenderComponent {
@@ -112,9 +113,11 @@ void InitializeScene() {
         // Initialize ships
         TransformComponent& shipTransform = transformStorage.GetOrAllocate<TransformComponent>(ship);
         shipTransform.position = raylib::Vector3{ -100.0f * i, 0.0f, 100.0f * i };
-        shipTransform.yaw = 90.0f; 
+        shipTransform.yaw = -90.0f; 
 
         Kinematics& shipKinematics = kinematicsStorage.GetOrAllocate<Kinematics>(ship);
+		shipKinematics.velocity = raylib::Vector3{0.0f, 0.0f, 0.0f}; // Explicitly set initial velocity to zero
+        shipKinematics.speed = 0.0f; // Explicitly set initial speed to zero
         shipKinematics.maxSpeed = 20.0f + 10.0f * i; // Each ship has different max speed
         shipKinematics.acceleration = 2.0f + 1.0f * i; // Different acceleration
     }
@@ -124,9 +127,11 @@ void InitializeScene() {
 
         TransformComponent& planeTransform = transformStorage.GetOrAllocate<TransformComponent>(plane);
         planeTransform.position = raylib::Vector3{ -100.0f * i, 200.0f, 100.0f * i }; // Directly above ships
-        planeTransform.rotation = QuaternionFromEuler(0, 90.0f * DEG2RAD, 0); // Facing right
+        planeTransform.rotation = QuaternionFromEuler(0, 0.0f * DEG2RAD, 0); // Facing right
 
         Kinematics& planeKinematics = kinematicsStorage.GetOrAllocate<Kinematics>(plane);
+		planeKinematics.velocity = raylib::Vector3{0.0f, 0.0f, 0.0f}; // Explicitly set initial velocity to zero
+        planeKinematics.speed = 0.0f; // Explicitly set initial speed to zero
         planeKinematics.maxSpeed = 50.0f + 20.0f * i; 
         planeKinematics.acceleration = 5.0f + 2.0f * i;
 	}
@@ -199,7 +204,8 @@ void Update2DPhysics(ComponentStorage& transformStorage, ComponentStorage& kinem
         TransformComponent& transform = transformStorage.Get<TransformComponent>(e);
         Kinematics& kinematics = kinematicsStorage.Get<Kinematics>(e);
 
-        if (std::abs(kinematics.acceleration) > 0.001f) {
+        // Apply acceleration only if shouldAccelerate is true
+        if (kinematics.shouldAccelerate && std::abs(kinematics.acceleration) > 0.001f) {
             kinematics.speed += kinematics.acceleration * deltaTime;
             if (kinematics.speed < 0.0f) {
 				kinematics.speed = 0.0f;
@@ -209,9 +215,9 @@ void Update2DPhysics(ComponentStorage& transformStorage, ComponentStorage& kinem
         }
 
         kinematics.velocity = raylib::Vector3{
-            cos(transform.yaw * DEG2RAD) * kinematics.speed, 
-            0, 
-            sin(transform.yaw * DEG2RAD) * kinematics.speed  
+            cos(transform.yaw * DEG2RAD) * kinematics.speed,
+            0,
+            sin(transform.yaw * DEG2RAD) * kinematics.speed
         };
 
         transform.position += kinematics.velocity * deltaTime;
@@ -223,7 +229,8 @@ void Update3DPhysics(ComponentStorage& transformStorage, ComponentStorage& kinem
         TransformComponent& transform = transformStorage.Get<TransformComponent>(e);
         Kinematics& kinematics = kinematicsStorage.Get<Kinematics>(e);
 
-        if (std::abs(kinematics.acceleration) > 0.001f) {
+        // Apply acceleration only if shouldAccelerate is true
+        if (kinematics.shouldAccelerate && std::abs(kinematics.acceleration) > 0.001f) {
             kinematics.speed += kinematics.acceleration * deltaTime;
             if (kinematics.speed < 0.0f) {
                 kinematics.speed = 0.0f;
@@ -235,7 +242,6 @@ void Update3DPhysics(ComponentStorage& transformStorage, ComponentStorage& kinem
         raylib::Vector3 forward = Vector3RotateByQuaternion(raylib::Vector3{0, 0, 1}, transform.rotation);
         kinematics.velocity = forward * kinematics.speed;
 
-        // Update position based on velocity
         transform.position += kinematics.velocity * deltaTime;
     }
 }
@@ -275,6 +281,7 @@ int main() {
 		selectedEntity = (selectedEntity + 1) % 10; // Cycle through entities
 	}).move();
 	inputs["W"] = raylib::Action::key(KEY_W).SetPressedCallback([]{
+		kinematicsStorage.GetOrAllocate<Kinematics>(selectedEntity).shouldAccelerate = true;
 		kinematicsStorage.GetOrAllocate<Kinematics>(selectedEntity).speed += 1;
 	}).move();
 	inputs["S"] = raylib::Action::key(KEY_S).SetPressedCallback([]{
@@ -287,16 +294,27 @@ int main() {
 		transformStorage.GetOrAllocate<TransformComponent>(selectedEntity).yaw += 5;
 	}).move();
 	inputs["Q"] = raylib::Action::key(KEY_Q).SetPressedCallback([]{
-		// transform.pitch += 5;
+		TransformComponent& transform = transformStorage.GetOrAllocate<TransformComponent>(selectedEntity);
+		raylib::Quaternion qPitch = QuaternionFromAxisAngle({1.0f, 0.0f, 0.0f}, 5 * DEG2RAD);  // Pitch up
+		transform.rotation = QuaternionMultiply(transform.rotation, qPitch);
 	}).move();
+
 	inputs["E"] = raylib::Action::key(KEY_E).SetPressedCallback([]{
-		// transform.pitch -= 5;
+		TransformComponent& transform = transformStorage.GetOrAllocate<TransformComponent>(selectedEntity);
+		raylib::Quaternion qPitch = QuaternionFromAxisAngle({1.0f, 0.0f, 0.0f}, -5 * DEG2RAD);  // Pitch down
+		transform.rotation = QuaternionMultiply(transform.rotation, qPitch);
 	}).move();
+
 	inputs["R"] = raylib::Action::key(KEY_R).SetPressedCallback([]{
-		// transform.roll += 5;
+		TransformComponent& transform = transformStorage.GetOrAllocate<TransformComponent>(selectedEntity);
+		raylib::Quaternion qRoll = QuaternionFromAxisAngle({0.0f, 0.0f, 1.0f}, 5 * DEG2RAD);  // Roll right
+		transform.rotation = QuaternionMultiply(transform.rotation, qRoll);
 	}).move();
+
 	inputs["F"] = raylib::Action::key(KEY_F).SetPressedCallback([]{
-		// transform.roll -= 5;
+		TransformComponent& transform = transformStorage.GetOrAllocate<TransformComponent>(selectedEntity);
+		raylib::Quaternion qRoll = QuaternionFromAxisAngle({0.0f, 0.0f, 1.0f}, -5 * DEG2RAD);  // Roll left
+		transform.rotation = QuaternionMultiply(transform.rotation, qRoll);
 	}).move();
 
 	raylib::Model plane = LoadModel("381Resources/meshes/PolyPlane.glb");
@@ -306,11 +324,11 @@ int main() {
 	raylib::Model shipModel3 = LoadModel("381Resources/meshes/OilTanker.glb");
 	raylib::Model shipModel4 = LoadModel("381Resources/meshes/SmitHouston_Tug.glb");
 
-	shipModel0.transform = raylib::Transform(shipModel0.transform).Scale(0.0000000005, 0.0000000005, 0.0000000005);
-	shipModel1.transform = raylib::Transform(shipModel1.transform).Scale(0.0000000005, 0.0000000005, 0.0000000005);
-	shipModel2.transform = raylib::Transform(shipModel2.transform).Scale(0.005, 0.005, 0.005);
-	shipModel3.transform = raylib::Transform(shipModel3.transform).Scale(0.0005, 0.0005, 0.0005);
-	shipModel4.transform = raylib::Transform(shipModel4.transform).Scale(0.0005, 0.0005, 0.0005);
+	shipModel0.transform = MatrixScale(0.5f, 0.5f, 0.5f);
+	shipModel1.transform = MatrixScale(0.00000000000000005f, 0.000000000000005f, 0.00050000000000f);
+	shipModel2.transform = MatrixScale(0.5f, 0.5f, 0.5f);
+	shipModel3.transform = MatrixScale(0.5f, 0.5f, 0.5f);
+	shipModel4.transform = MatrixScale(0.5f, 0.5f, 0.5f);
 
 	InitializeComponents();
 	InitializeScene();

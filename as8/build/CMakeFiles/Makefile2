@@ -290,6 +290,8 @@ raylib-cpp/raylib/raylib/external/glfw/src/clean: raylib-cpp/raylib/raylib/exter
 # All Build rule for target.
 CMakeFiles/as8.dir/all: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/all
 CMakeFiles/as8.dir/all: raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/all
+CMakeFiles/as8.dir/all: raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/all
+CMakeFiles/as8.dir/all: raylib-cpp/BufferedRaylib/FastSignals/libfastsignals/CMakeFiles/libfastsignals.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/as8.dir/build.make CMakeFiles/as8.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/as8.dir/build.make CMakeFiles/as8.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ashton/cs381/as8/build/CMakeFiles --progress-num=1,2,3 "Built target as8"
@@ -297,7 +299,7 @@ CMakeFiles/as8.dir/all: raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/gl
 
 # Build rule for subdir invocation for target.
 CMakeFiles/as8.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ashton/cs381/as8/build/CMakeFiles 35
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ashton/cs381/as8/build/CMakeFiles 41
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/as8.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ashton/cs381/as8/build/CMakeFiles 0
 .PHONY : CMakeFiles/as8.dir/rule

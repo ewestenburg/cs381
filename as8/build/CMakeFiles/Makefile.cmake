@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
   "../381Resources/meshes/CargoG_HOSBrigadoon.glb"
+  "../381Resources/meshes/Container_ShipLarge.glb"
   "../381Resources/meshes/OilTanker.glb"
   "../381Resources/meshes/OrientExplorer.glb"
   "../381Resources/meshes/PolyPlane.glb"
@@ -106,6 +107,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "381Resources/meshes/ddg51.glb"
   "381Resources/meshes/OilTanker.glb"
   "381Resources/meshes/SmitHouston_Tug.glb"
+  "381Resources/meshes/Container_ShipLarge.glb"
   "381Resources/textures/skybox.png"
   "381Resources/textures/grass.jpg"
   "381Resources/textures/water.jpg"

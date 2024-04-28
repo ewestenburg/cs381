@@ -20,12 +20,16 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../raylib-cpp/raylib/src"
   "../raylib-cpp/raylib/src/external/glfw/include"
   "../raylib-cpp/include"
+  "../raylib-cpp/BufferedRaylib/src"
+  "../"
   )
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
   "/home/ashton/cs381/as8/build/raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/DependInfo.cmake"
+  "/home/ashton/cs381/as8/build/raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/DependInfo.cmake"
   "/home/ashton/cs381/as8/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/DependInfo.cmake"
+  "/home/ashton/cs381/as8/build/raylib-cpp/BufferedRaylib/FastSignals/libfastsignals/CMakeFiles/libfastsignals.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

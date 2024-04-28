@@ -114,12 +114,15 @@ as8: CMakeFiles/as8.dir/src/as8.cpp.o
 as8: CMakeFiles/as8.dir/src/skybox.cpp.o
 as8: CMakeFiles/as8.dir/build.make
 as8: raylib-cpp/raylib/raylib/libraylib.a
+as8: raylib-cpp/BufferedRaylib/libbuffered-raylib.a
+as8: raylib-cpp/raylib/raylib/libraylib.a
 as8: /usr/lib/x86_64-linux-gnu/libOpenGL.so
 as8: /usr/lib/x86_64-linux-gnu/libGLX.so
 as8: /usr/lib/x86_64-linux-gnu/libGLU.so
 as8: raylib-cpp/raylib/raylib/external/glfw/src/libglfw3.a
 as8: /usr/lib/x86_64-linux-gnu/librt.so
 as8: /usr/lib/x86_64-linux-gnu/libm.so
+as8: raylib-cpp/BufferedRaylib/FastSignals/libfastsignals/liblibfastsignals.a
 as8: CMakeFiles/as8.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ashton/cs381/as8/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable as8"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/as8.dir/link.txt --verbose=$(VERBOSE)

@@ -8,6 +8,8 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
+#include <cmath>
+#include <BufferedInput.hpp>
 
 #include "skybox.hpp"
 
@@ -16,8 +18,8 @@ using Entity = uint8_t;
 // Components
 struct TransformComponent {
     raylib::Vector3 position;
-    raylib::Quaternion rotation;  // Used for 3D physics
-    float yaw;  // Used for 2D physics
+    raylib::Quaternion rotation;  
+    float yaw; 
 };
 
 struct Kinematics {
@@ -76,32 +78,60 @@ struct ComponentStorage {
     }
 };
 
-// Define entity IDs
+// Entity IDs
 enum Entities : Entity {
-    plane0,
-    plane1,
-    plane2,
-	plane3,
-	plane4,
 	ship0,
 	ship1,
 	ship2,
 	ship3,
-	ship4
+	ship4,
+	plane0,
+    plane1,
+    plane2,
+	plane3,
+	plane4
 };
 
 // Global component storages
 ComponentStorage transformStorage(sizeof(TransformComponent));
 ComponentStorage kinematicsStorage(sizeof(Kinematics));
 ComponentStorage renderStorage(sizeof(RenderComponent));
+int selectedEntity = 0;
 
 void InitializeComponents() {
-	// Allocate storage for each component type based on expected number of entities
-	size_t numEntities = 5;  // Example for 5 ships and 5 planes
+	size_t numEntities = 5;  //for 5 ships and 5 planes
 	transformStorage.Allocate<TransformComponent>(numEntities * 2);
 	kinematicsStorage.Allocate<Kinematics>(numEntities * 2);
 	renderStorage.Allocate<RenderComponent>(numEntities * 2);
 }
+
+void InitializeScene() {
+    for (int i = 0; i < 5; i++) {
+        Entity ship = static_cast<Entity>(ship0 + i);
+
+        // Initialize ships
+        TransformComponent& shipTransform = transformStorage.GetOrAllocate<TransformComponent>(ship);
+        shipTransform.position = raylib::Vector3{ -100.0f * i, 0.0f, 100.0f * i };
+        shipTransform.yaw = 90.0f; 
+
+        Kinematics& shipKinematics = kinematicsStorage.GetOrAllocate<Kinematics>(ship);
+        shipKinematics.maxSpeed = 20.0f + 10.0f * i; // Each ship has different max speed
+        shipKinematics.acceleration = 2.0f + 1.0f * i; // Different acceleration
+    }
+
+	for (int i = 0; i < 5; i++) {
+		Entity plane = static_cast<Entity>(plane0 + i);
+
+        TransformComponent& planeTransform = transformStorage.GetOrAllocate<TransformComponent>(plane);
+        planeTransform.position = raylib::Vector3{ -100.0f * i, 200.0f, 100.0f * i }; // Directly above ships
+        planeTransform.rotation = QuaternionFromEuler(0, 90.0f * DEG2RAD, 0); // Facing right
+
+        Kinematics& planeKinematics = kinematicsStorage.GetOrAllocate<Kinematics>(plane);
+        planeKinematics.maxSpeed = 50.0f + 20.0f * i; 
+        planeKinematics.acceleration = 5.0f + 2.0f * i;
+	}
+}
+
 
 // Transformer concept
 template<typename T>
@@ -119,45 +149,28 @@ struct CalculateVelocityParams {
     std::array<raylib::Degree, 10> targetHeading;
 };
 
-bool ProcessInput(ComponentStorage& speedStorage, ComponentStorage& headingStorage, size_t selectedPlane) {
-    // Update speed and heading based on input
-    TransformComponent& transform = transformStorage.GetOrAllocate<TransformComponent>(selectedPlane);
-    Kinematics& kinematics = kinematicsStorage.GetOrAllocate<Kinematics>(selectedPlane);
+raylib::Vector3 CalculateVelocity(const CalculateVelocityParams& data, size_t entityIndex) {
+	if (entityIndex >= data.targetSpeed.size()) {
+		return {0, 0, 0};
+	}
 
+	float speed = data.targetSpeed[entityIndex];
+	float headingInRadians = static_cast<float>(data.targetHeading[entityIndex]) * (M_PI / 180.0f);
 
-    // Similar input handling code as before, modifying speed.value and heading.value
-    // For example:
-    if (IsKeyDown(KEY_W))
-        kinematics.speed += 1;
-    if (IsKeyDown(KEY_A))
-        // Assuming transform.rotation is a raylib::Quaternion
-		transform.rotation = QuaternionMultiply(transform.rotation, QuaternionFromAxisAngle(raylib::Vector3{0, 1, 0}, 5 * DEG2RAD));
+	float vx = speed * cos(headingInRadians);
+	float vz = speed * sin(headingInRadians);
 
-
-    // Handle plane selection
-    if (IsKeyPressed(KEY_TAB))
-        selectedPlane = (selectedPlane + 1) % 10;
-
-    return !IsKeyDown(KEY_ESCAPE);
-}
-
-
-// CalculateVelocity function
-raylib::Vector3 CalculateVelocity(const CalculateVelocityParams& data) {
-    // Implement velocity calculation using data from CalculateVelocityParams
-	return {0, 0, 0};
+	return {vx, 0, vz};
 }
 
 // DrawBoundedModel function
 void DrawBoundedModel(raylib::Model& model, Entity planeEntity) {
     TransformComponent& transform = transformStorage.GetOrAllocate<TransformComponent>(planeEntity);
 
-    // Convert quaternion rotation to Matrix and apply translation
     raylib::Matrix matRotation = QuaternionToMatrix(transform.rotation);
     raylib::Matrix matTranslation = MatrixTranslate(transform.position.x, transform.position.y, transform.position.z);
     raylib::Matrix transformMatrix = MatrixMultiply(matRotation, matTranslation);
 
-    // Set the model transform, draw the model and bounding box
     raylib::Transform backupTransform = model.transform;
     model.transform = transformMatrix;
     model.Draw({});
@@ -170,7 +183,6 @@ void DrawBoundedModel(raylib::Model& model, Entity planeEntity) {
 void DrawModel(raylib::Model& model, Entity planeEntity) {
     TransformComponent& transform = transformStorage.GetOrAllocate<TransformComponent>(planeEntity);
 
-    // Convert quaternion rotation to Matrix and apply translation
     raylib::Matrix matRotation = QuaternionToMatrix(transform.rotation);
     raylib::Matrix matTranslation = MatrixTranslate(transform.position.x, transform.position.y, transform.position.z);
     raylib::Matrix transformMatrix = MatrixMultiply(matRotation, matTranslation);
@@ -182,18 +194,12 @@ void DrawModel(raylib::Model& model, Entity planeEntity) {
     model.transform = backupTransform;
 }
 
-void UpdatePhysics(ComponentStorage& transformStorage, ComponentStorage& kinematicsStorage, float deltaTime) {
-    for (Entity e = 0; e < 10; e++) {
+void Update2DPhysics(ComponentStorage& transformStorage, ComponentStorage& kinematicsStorage, float deltaTime) {
+    for (Entity e = ship0; e <= ship4; e++) {
         TransformComponent& transform = transformStorage.Get<TransformComponent>(e);
         Kinematics& kinematics = kinematicsStorage.Get<Kinematics>(e);
 
-        // Update the position based on velocity
-        transform.position += kinematics.velocity * deltaTime;
-
-        // If additional rotational dynamics are involved:
-        // Example: Update yaw, which could be used for 2D elements in a 3D world (like ships)
-        // This would require converting the yaw changes into a quaternion and applying it to rotation
-        if (std::abs(kinematics.acceleration) > 0.001f) {  // Check if there's meaningful acceleration
+        if (std::abs(kinematics.acceleration) > 0.001f) {
             kinematics.speed += kinematics.acceleration * deltaTime;
             if (kinematics.speed < 0.0f) {
 				kinematics.speed = 0.0f;
@@ -202,12 +208,56 @@ void UpdatePhysics(ComponentStorage& transformStorage, ComponentStorage& kinemat
 			}
         }
 
-        // Update the velocity based on speed and direction (assuming yaw is the direction in 2D)
         kinematics.velocity = raylib::Vector3{
-            cos(transform.yaw * DEG2RAD) * kinematics.speed,  // X component
-            0,  // Y component, assuming no vertical movement
-            sin(transform.yaw * DEG2RAD) * kinematics.speed   // Z component
+            cos(transform.yaw * DEG2RAD) * kinematics.speed, 
+            0, 
+            sin(transform.yaw * DEG2RAD) * kinematics.speed  
         };
+
+        transform.position += kinematics.velocity * deltaTime;
+    }
+}
+
+void Update3DPhysics(ComponentStorage& transformStorage, ComponentStorage& kinematicsStorage, float deltaTime) {
+    for (Entity e = plane0; e <= plane4; e++) {
+        TransformComponent& transform = transformStorage.Get<TransformComponent>(e);
+        Kinematics& kinematics = kinematicsStorage.Get<Kinematics>(e);
+
+        if (std::abs(kinematics.acceleration) > 0.001f) {
+            kinematics.speed += kinematics.acceleration * deltaTime;
+            if (kinematics.speed < 0.0f) {
+                kinematics.speed = 0.0f;
+            } else if (kinematics.speed > kinematics.maxSpeed) {
+                kinematics.speed = kinematics.maxSpeed;
+            }
+        }
+
+        raylib::Vector3 forward = Vector3RotateByQuaternion(raylib::Vector3{0, 0, 1}, transform.rotation);
+        kinematics.velocity = forward * kinematics.speed;
+
+        // Update position based on velocity
+        transform.position += kinematics.velocity * deltaTime;
+    }
+}
+
+raylib::Matrix MatrixFromTransformComponent(const TransformComponent& transform) {
+    raylib::Matrix rotationMatrix = QuaternionToMatrix(transform.rotation);
+    raylib::Matrix translationMatrix = MatrixTranslate(transform.position.x, transform.position.y, transform.position.z);
+
+    raylib::Matrix transformMatrix = MatrixMultiply(rotationMatrix, translationMatrix);
+
+    return transformMatrix;
+}
+
+void DrawEntity(raylib::Model& model, Entity entity, bool drawBound) {
+    TransformComponent& transform = transformStorage.Get<TransformComponent>(entity);
+    raylib::Matrix transformMatrix = MatrixFromTransformComponent(transform); // You need to implement this
+
+    model.transform = transformMatrix;
+    model.Draw({});
+
+    if (drawBound) {
+        model.GetTransformedBoundingBox().Draw();
     }
 }
 
@@ -217,43 +267,64 @@ int main() {
     const int screenHeight = 450 * 2;
     raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 8");
 
+	raylib::BufferedInput inputs;
+	inputs["SPACE"] = raylib::Action::key(KEY_SPACE).SetPressedCallback([]{
+		kinematicsStorage.GetOrAllocate<Kinematics>(selectedEntity).speed = 0;
+	}).move();
+	inputs["TAB"] = raylib::Action::key(KEY_TAB).SetPressedCallback([]{
+		selectedEntity = (selectedEntity + 1) % 10; // Cycle through entities
+	}).move();
+	inputs["W"] = raylib::Action::key(KEY_W).SetPressedCallback([]{
+		kinematicsStorage.GetOrAllocate<Kinematics>(selectedEntity).speed += 1;
+	}).move();
+	inputs["S"] = raylib::Action::key(KEY_S).SetPressedCallback([]{
+		kinematicsStorage.GetOrAllocate<Kinematics>(selectedEntity).speed = std::max(0.0f, kinematicsStorage.GetOrAllocate<Kinematics>(selectedEntity).speed - 1);
+	}).move();
+	inputs["A"] = raylib::Action::key(KEY_A).SetPressedCallback([]{
+		transformStorage.GetOrAllocate<TransformComponent>(selectedEntity).yaw -= 5;
+	}).move();
+	inputs["D"] = raylib::Action::key(KEY_D).SetPressedCallback([]{
+		transformStorage.GetOrAllocate<TransformComponent>(selectedEntity).yaw += 5;
+	}).move();
+	inputs["Q"] = raylib::Action::key(KEY_Q).SetPressedCallback([]{
+		// transform.pitch += 5;
+	}).move();
+	inputs["E"] = raylib::Action::key(KEY_E).SetPressedCallback([]{
+		// transform.pitch -= 5;
+	}).move();
+	inputs["R"] = raylib::Action::key(KEY_R).SetPressedCallback([]{
+		// transform.roll += 5;
+	}).move();
+	inputs["F"] = raylib::Action::key(KEY_F).SetPressedCallback([]{
+		// transform.roll -= 5;
+	}).move();
+
 	raylib::Model plane = LoadModel("381Resources/meshes/PolyPlane.glb");
+	raylib::Model shipModel0 = LoadModel("381Resources/meshes/Container_ShipLarge.glb");
+	raylib::Model shipModel1 = LoadModel("381Resources/meshes/CargoG_HOSBrigadoon.glb");
+	raylib::Model shipModel2 = LoadModel("381Resources/meshes/ddg51.glb");
+	raylib::Model shipModel3 = LoadModel("381Resources/meshes/OilTanker.glb");
+	raylib::Model shipModel4 = LoadModel("381Resources/meshes/SmitHouston_Tug.glb");
+
+	shipModel0.transform = raylib::Transform(shipModel0.transform).Scale(0.0000000005, 0.0000000005, 0.0000000005);
+	shipModel1.transform = raylib::Transform(shipModel1.transform).Scale(0.0000000005, 0.0000000005, 0.0000000005);
+	shipModel2.transform = raylib::Transform(shipModel2.transform).Scale(0.005, 0.005, 0.005);
+	shipModel3.transform = raylib::Transform(shipModel3.transform).Scale(0.0005, 0.0005, 0.0005);
+	shipModel4.transform = raylib::Transform(shipModel4.transform).Scale(0.0005, 0.0005, 0.0005);
 
 	InitializeComponents();
-
-	// Define variables for plane 0
-	raylib::Vector3 plane0Position = {0.0f, 0.0f, 0.0f};
-	raylib::Vector3 plane0Velocity = {0.0f, 0.0f, 0.0f};
-	raylib::Degree plane0TargetHeading = 0.0f;
-	float plane0TargetSpeed = 0.0f;
-
-	// Define variables for plane 1
-	raylib::Vector3 plane1Position = {0.0f, 0.0f, 0.0f};
-	raylib::Vector3 plane1Velocity = {0.0f, 0.0f, 0.0f};
-	raylib::Degree plane1TargetHeading = 0.0f;
-	float plane1TargetSpeed = 0.0f;
-
-	// Define variables for plane 2
-	raylib::Vector3 plane2Position = {0.0f, 0.0f, 0.0f};
-	raylib::Vector3 plane2Velocity = {0.0f, 0.0f, 0.0f};
-	raylib::Degree plane2TargetHeading = 0.0f;
-	float plane2TargetSpeed = 0.0f;
-
-    
-    size_t selectedPlane = 0;
+	InitializeScene();
 
     // Main loop
     bool keepRunning = true;
     while(!window.ShouldClose() && keepRunning) {
-        // Updates
-        if (!ProcessInput(transformStorage, kinematicsStorage, selectedPlane))
-            break;
+    
+		float deltaTime = window.GetFrameTime();
 
-        // Physics update for each entity
-        float deltaTime = window.GetFrameTime();
-        for (Entity e = plane0; e <= plane2; e++) {
-            UpdatePhysics(transformStorage, kinematicsStorage, deltaTime);
-        }
+		inputs.PollEvents();
+
+		Update2DPhysics(transformStorage, kinematicsStorage, deltaTime); // For ships
+		Update3DPhysics(transformStorage, kinematicsStorage, deltaTime); // For planes
 
 		// Create camera
 		auto camera = raylib::Camera(
@@ -288,22 +359,16 @@ int main() {
 				skybox.Draw();
 				ground.Draw({});
 
-				// Draw the planes with a bounding box around the selected plane
-				switch(selectedPlane) {
-					break; case 0: {
-						DrawBoundedModel(plane, plane0);
-						DrawModel(plane, plane1);
-						DrawModel(plane, plane2);
-					} break; case 1: {
-						DrawModel(plane, plane0);
-						DrawBoundedModel(plane, plane1);
-						DrawModel(plane, plane2);
-					} break; case 2: {
-						DrawModel(plane, plane0);
-						DrawModel(plane, plane1);
-						DrawBoundedModel(plane, plane2);
-					}
-				}
+				DrawEntity(shipModel4, ship0, selectedEntity == ship0);
+				DrawEntity(shipModel4, ship1, selectedEntity == ship1);
+				DrawEntity(shipModel4, ship2, selectedEntity == ship2);
+				DrawEntity(shipModel4, ship3, selectedEntity == ship3);
+				DrawEntity(shipModel4, ship4, selectedEntity == ship4);
+				DrawEntity(plane, plane0, selectedEntity == plane0);
+				DrawEntity(plane, plane1, selectedEntity == plane1);
+				DrawEntity(plane, plane2, selectedEntity == plane2);
+				DrawEntity(plane, plane3, selectedEntity == plane3);
+				DrawEntity(plane, plane4, selectedEntity == plane4);
 			}
 			camera.EndMode();
 
@@ -312,6 +377,5 @@ int main() {
 		}
 		window.EndDrawing();
     }
-
     return 0;
 }

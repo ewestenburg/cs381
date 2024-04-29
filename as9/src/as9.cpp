@@ -124,6 +124,7 @@ void InitializeComponents() {
 }
 
 void InitializeScene() {
+    // PERSON
     Entity person = static_cast<Entity>(Person);
     TransformComponent& personTransform = transformStorage.GetOrAllocate<TransformComponent>(Person);
     personTransform.position = raylib::Vector3{450.0f, 1.0f, 0.0f};
@@ -135,6 +136,11 @@ void InitializeScene() {
     personKinematics.maxSpeed = 200.0f; 
     personKinematics.acceleration = 100.0f; 
 
+    RenderComponent& personRender = renderStorage.GetOrAllocate<RenderComponent>(Person);
+    personRender.model = LoadModel("models/rp_mei_posed_001_30k.obj");
+    personRender.drawBoundingBox = true;
+
+    //OBSTACLE 1
     Entity obstacle1 = static_cast<Entity>(Obstacle1);
     TransformComponent& obstacle1Transform = transformStorage.GetOrAllocate<TransformComponent>(Obstacle1);
     obstacle1Transform.position = raylib::Vector3{-50.0f, 0.0f, 0.0f};
@@ -146,6 +152,11 @@ void InitializeScene() {
     obstacle1Kinematics.maxSpeed = 0.0f; 
     obstacle1Kinematics.acceleration = 0.0f; 
 
+    RenderComponent& obstacleRender1 = renderStorage.GetOrAllocate<RenderComponent>(Obstacle1);
+    obstacleRender1.model = LoadModel("models/16314_MTBike_obstacle05_v1.obj");
+    obstacleRender1.drawBoundingBox = false;
+
+    //OBSTACLE 2
     Entity obstacle2 = static_cast<Entity>(Obstacle2);
     TransformComponent& obstacle2Transform = transformStorage.GetOrAllocate<TransformComponent>(Obstacle2);
     obstacle2Transform.position = raylib::Vector3{-500.0f, 0.0f, 0.0f};
@@ -155,8 +166,13 @@ void InitializeScene() {
     obstacle2Kinematics.velocity = raylib::Vector3{0.0f, 0.0f, 0.0f};
     obstacle2Kinematics.speed = 0.0f; 
     obstacle2Kinematics.maxSpeed = 0.0f; 
-    obstacle2Kinematics.acceleration = 0.0f; 
+    obstacle2Kinematics.acceleration = 0.0f;
 
+    RenderComponent& obstacleRender2 = renderStorage.GetOrAllocate<RenderComponent>(Obstacle2);
+    obstacleRender2.model = LoadModel("models/16314_MTBike_obstacle05_v1.obj");
+    obstacleRender2.drawBoundingBox = false; 
+
+    //OBSTACLE 3
     Entity obstacle3 = static_cast<Entity>(Obstacle3);
     TransformComponent& obstacle3Transform = transformStorage.GetOrAllocate<TransformComponent>(Obstacle3);
     obstacle3Transform.position = raylib::Vector3{-1000.0f, 0.0f, 0.0f};
@@ -167,6 +183,10 @@ void InitializeScene() {
     obstacle3Kinematics.speed = 0.0f; 
     obstacle3Kinematics.maxSpeed = 0.0f; 
     obstacle3Kinematics.acceleration = 0.0f; 
+
+    RenderComponent& obstacleRender3 = renderStorage.GetOrAllocate<RenderComponent>(Obstacle3);
+    obstacleRender3.model = LoadModel("models/16314_MTBike_obstacle05_v1.obj");
+    obstacleRender3.drawBoundingBox = false; 
 }
 
 // Transformer concept
@@ -204,15 +224,16 @@ raylib::Matrix MatrixFromTransformComponent(const TransformComponent& transform)
     return transformMatrix;
 }
 
-void DrawEntity(raylib::Model& model, Entity entity, bool drawBound) {
+void DrawEntity(Entity entity) {
     TransformComponent& transform = transformStorage.Get<TransformComponent>(entity);
-    raylib::Matrix transformMatrix = MatrixFromTransformComponent(transform); 
+    RenderComponent& render = renderStorage.Get<RenderComponent>(entity);
 
-    model.transform = transformMatrix;
-    model.Draw({});
+    raylib::Matrix transformMatrix = MatrixFromTransformComponent(transform);
+    render.model.transform = transformMatrix;
+    render.model.Draw({});
 
-    if (drawBound) {
-        model.GetTransformedBoundingBox().Draw();
+    if (render.drawBoundingBox) {
+        render.model.GetTransformedBoundingBox().Draw();
     }
 }
 
@@ -379,10 +400,10 @@ int main() {
             ground.Draw({});
 
             // Draw entities
-            DrawEntity(person, Person, true);
-            DrawEntity(obstacle, Obstacle1, false);
-            DrawEntity(obstacle, Obstacle2, false);
-            DrawEntity(obstacle, Obstacle3, false);
+            DrawEntity(Person);
+            DrawEntity(Obstacle1);
+            DrawEntity(Obstacle2);
+            DrawEntity(Obstacle3);
 
             camera.EndMode();
 

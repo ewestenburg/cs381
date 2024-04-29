@@ -61,3 +61,16 @@ Hold S to jump
 
 Press SPACE to reset game when game over
 ![cs381-as9-2](https://github.com/ewestenburg/cs381/assets/70497906/d2cdf995-43b2-4cde-96ce-f4a12065fab3)
+
+**Grading Myself**
+
+- Interactable (15 Points): Uses keyboard input
+- Draw Model and Play Sound (30 Points): Draws model of person, obstacle, and plays sound effects when jumping, a point is scored, and when the game is over
+- Custom Sound (5 Points): Custom score point sound
+- Display Text (15 Points): Displays text indicating controls, score and when game is over
+- Description of Criterion (10 Points): Described Criteria
+- Window named AS9 (5 Points): Window is named Assignment 9
+- Minimum 2 Systems Not Proposed in Class (Unsure if satisfied)
+- Read Me with Pictures (5 Points): Read Me includes pictures
+
+Total: 85 Points

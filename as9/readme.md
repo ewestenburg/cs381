@@ -36,5 +36,6 @@ After compile, there will be a resulting executable that can be run titled as6
 Hold W to increase velocity forward
 ![cs381-as9-1](https://github.com/ewestenburg/cs381/assets/70497906/2a69133d-9b12-4065-9159-41f168baaa14)
 Hold S to jump
+
 Press SPACE to reset game when game over
 ![cs381-as9-2](https://github.com/ewestenburg/cs381/assets/70497906/d2cdf995-43b2-4cde-96ce-f4a12065fab3)

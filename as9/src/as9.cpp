@@ -88,10 +88,12 @@ enum Entities : Entity {
     Obstacle3
 };
 
-// Global component storages
+// Global Component Storage
 ComponentStorage transformStorage(sizeof(TransformComponent));
 ComponentStorage kinematicsStorage(sizeof(Kinematics));
 ComponentStorage renderStorage(sizeof(RenderComponent));
+
+// Global Variables
 int selectedEntity = 0;
 bool isJumping = false;
 float jumpVelocity = 80.0f;  // Initial jump velocity
@@ -101,9 +103,21 @@ bool gamePaused = false;
 std::default_random_engine generator;
 std::uniform_int_distribution<int> distribution(300, 700);
 int score = 0;
+raylib::AudioDevice audio;
+Sound jumpEffect;
+Sound scoreEffect;
+Sound loseEffect;
+Music backgroundMusic;
+
+void LoadAudioFiles() {
+    jumpEffect = LoadSound("381Resources/audio/jump.mp3");
+    scoreEffect = LoadSound("381Resources/audio/score.mp3");
+    backgroundMusic = LoadMusicStream("381Resources/audio/cdg.mp3");
+    loseEffect = LoadSound("381Resources/audio/gameover.mp3");
+}
 
 void InitializeComponents() {
-	size_t numEntities = 5;  //for 5 ships and 5 planes
+	size_t numEntities = 5;  
 	transformStorage.Allocate<TransformComponent>(numEntities * 2);
 	kinematicsStorage.Allocate<Kinematics>(numEntities * 2);
 	renderStorage.Allocate<RenderComponent>(numEntities * 2);
@@ -155,55 +169,29 @@ void InitializeScene() {
     obstacle3Kinematics.acceleration = 0.0f; 
 }
 
-
 // Transformer concept
 template<typename T>
 concept Transformer = requires(T t, raylib::Transform m) {
 	{ t.operator()(m) } -> std::convertible_to<raylib::Transform>;
 };
 
-// CalculateVelocityParams structure
-struct CalculateVelocityParams {
-    static constexpr float acceleration = 5;
-    static constexpr float angularAcceleration = 15;
-
-    std::array<raylib::Vector3, 10> position;
-    std::array<float, 10> targetSpeed;
-    std::array<raylib::Degree, 10> targetHeading;
-};
-
-raylib::Vector3 CalculateVelocity(const CalculateVelocityParams& data, size_t entityIndex) {
-	if (entityIndex >= data.targetSpeed.size()) {
-		return {0, 0, 0};
-	}
-
-	float speed = data.targetSpeed[entityIndex];
-	float headingInRadians = static_cast<float>(data.targetHeading[entityIndex]) * (M_PI / 180.0f);
-
-	float vx = speed * cos(headingInRadians);
-	float vz = speed * sin(headingInRadians);
-
-	return {vx, 0, vz};
-}
-
 void UpdatePhysics(ComponentStorage& transformStorage, ComponentStorage& kinematicsStorage, float deltaTime) {
     TransformComponent& transform = transformStorage.Get<TransformComponent>(Person);
     Kinematics& kinematics = kinematicsStorage.Get<Kinematics>(Person);
 
-    // Gravity application
+    // Gravity
     if (transform.position.y > 0 || isJumping) {
-        kinematics.velocity.y -= gravity * deltaTime; // Apply gravity
+        kinematics.velocity.y -= gravity * deltaTime; 
     }
 
     // Update position
     transform.position.x += kinematics.velocity.x * deltaTime;
     transform.position.y += kinematics.velocity.y * deltaTime;
 
-    // Check if landed on the ground
     if (transform.position.y < 0) {
-        transform.position.y = 0; // Clamp to ground level
-        kinematics.velocity.y = 0; // Stop vertical movement
-        isJumping = false; // Reset jumping state
+        transform.position.y = 0; 
+        kinematics.velocity.y = 0; 
+        isJumping = false; 
     }
 }
 
@@ -255,7 +243,7 @@ Entity GetClosestObstacleAhead(float playerX) {
     std::vector<Entity> obstacles = {Obstacle1, Obstacle2, Obstacle3};
     for (Entity obs : obstacles) {
         float distance = transformStorage.Get<TransformComponent>(obs).position.x - playerX;
-        if (distance > 0 && distance < minDistance) { // Obstacle ahead and closest
+        if (distance > 0 && distance < minDistance) { 
             closest = obs;
             minDistance = distance;
         }
@@ -267,19 +255,16 @@ Entity GetClosestObstacleAhead(float playerX) {
 void UpdateObstacles(raylib::Vector3& playerPosition) {
     Entity firstObstacle = Obstacle1, secondObstacle = Obstacle2, thirdObstacle = Obstacle3;
 
-    // Calculate which obstacle is the leftmost
     float leftMostX = std::min({
         transformStorage.Get<TransformComponent>(firstObstacle).position.x,
         transformStorage.Get<TransformComponent>(secondObstacle).position.x,
         transformStorage.Get<TransformComponent>(thirdObstacle).position.x
     });
 
-    // Check and recycle each obstacle if it's off-screen to the right
     std::vector<Entity> obstacles = {firstObstacle, secondObstacle, thirdObstacle};
     for (Entity obstacle : obstacles) {
         if (transformStorage.Get<TransformComponent>(obstacle).position.x > playerPosition.x + 500) {
-            int randomSpacing = distribution(generator);  // Get a random spacing value between 300 and 700
-            // Move this obstacle to the left of the leftmost obstacle with random spacing
+            int randomSpacing = distribution(generator); 
             transformStorage.Get<TransformComponent>(obstacle).position.x = leftMostX - randomSpacing;
             std::cout << "Recycled Obstacle " << static_cast<int>(obstacle) 
                       << " to " << leftMostX - randomSpacing << std::endl;
@@ -288,20 +273,20 @@ void UpdateObstacles(raylib::Vector3& playerPosition) {
 }
 
 void UpdateScoreAndObstacles(raylib::Vector3& playerPosition) {
-    static Entity lastObstacleJumped = 1; // Track the last obstacle jumped over
+    static Entity lastObstacleJumped = 0; 
     Entity currentClosestObstacle = GetClosestObstacleAhead(playerPosition.x);
 
-    if (score == 0 && currentClosestObstacle == lastObstacleJumped && playerPosition.y > transformStorage.Get<TransformComponent>(currentClosestObstacle).position.y + 50) {
-        score++;
+    if (currentClosestObstacle != 0 && currentClosestObstacle != lastObstacleJumped) {
+        TransformComponent& obstacleTransform = transformStorage.Get<TransformComponent>(currentClosestObstacle);
+        if (playerPosition.y > obstacleTransform.position.y + 50 && playerPosition.x < obstacleTransform.position.x) {
+            score++;
+            PlaySound(scoreEffect);
+            lastObstacleJumped = currentClosestObstacle; 
+            std::cout << "Scored! Total score: " << score << std::endl;
+        }
     }
 
-    if (currentClosestObstacle != lastObstacleJumped && playerPosition.y > transformStorage.Get<TransformComponent>(currentClosestObstacle).position.y + 50) {
-        score++;
-        lastObstacleJumped = currentClosestObstacle; // Update the last jumped obstacle
-        std::cout << "Scored! Total score: " << score << std::endl;
-    }
-
-    UpdateObstacles(playerPosition); // Continue to manage obstacles
+    UpdateObstacles(playerPosition); 
 }
 
 int main() {
@@ -310,17 +295,17 @@ int main() {
     const int screenHeight = 450 * 2;
     raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 9");
 
-    // Adjusting inputs for jump and movement
     raylib::BufferedInput inputs;
 	inputs["MOVE_RIGHT"] = raylib::Action::key(KEY_W).SetPressedCallback([&]{
-    if (!isJumping) {  // Optionally check if not jumping to move
-        kinematicsStorage.Get<Kinematics>(Person).velocity.x = -25.0f; // Positive x-direction velocity
+    if (!isJumping) {  
+        kinematicsStorage.Get<Kinematics>(Person).velocity.x = -25.0f; 
     }
     }).move();
     inputs["JUMP"] = raylib::Action::key(KEY_S).SetPressedCallback([&]{
-        if (!isJumping) { // Ensure we are on the ground
+        if (!isJumping) { 
             isJumping = true;
-            kinematicsStorage.Get<Kinematics>(Person).velocity.y = jumpVelocity; // Initial jump velocity
+            PlaySound(jumpEffect);
+            kinematicsStorage.Get<Kinematics>(Person).velocity.y = jumpVelocity; 
         }
     }).move();
 
@@ -330,10 +315,11 @@ int main() {
 
     InitializeComponents();
     InitializeScene();
+    LoadAudioFiles();
 
     // Main loop
     bool keepRunning = true;
-    bool gameOver = false;  // Game over state
+    bool gameOver = false; 
 
     TransformComponent& personTransform = transformStorage.GetOrAllocate<TransformComponent>(Person);
 
@@ -341,27 +327,26 @@ int main() {
         float deltaTime = window.GetFrameTime();
         if(!gamePaused){
             inputs.PollEvents();
-
-            // Update physics considering jump and collisions
             UpdatePhysics(transformStorage, kinematicsStorage, deltaTime);
             UpdateScoreAndObstacles(personTransform.position);
             if (isJumping) {
                 Kinematics& kin = kinematicsStorage.Get<Kinematics>(Person);
-                kin.velocity.y -= gravity * deltaTime;  // Apply gravity to the jump velocity
+                kin.velocity.y -= gravity * deltaTime;  
                 if (kin.velocity.y <= 0 && transformStorage.Get<TransformComponent>(Person).position.y <= 0) {
-                    isJumping = false;  // Stop jumping when reaching the ground level
+                    isJumping = false; 
                     kin.velocity.y = 0;
-                    transformStorage.Get<TransformComponent>(Person).position.y = 0;  // Reset to ground level
+                    transformStorage.Get<TransformComponent>(Person).position.y = 0;
                 }
             }
 
             // Collision detection
-            if (!gameOver) {  // Check collisions only if the game is not over
+            if (!gameOver) {  
                 gameOver = CheckCollisions(person, obstacle);
             }
 
             if (gameOver) {
                 gamePaused = true;  // Pause the game
+                PlaySound(loseEffect);
             }
         }
 
@@ -409,7 +394,7 @@ int main() {
 
             if (gamePaused) {
                 DrawText("GAME OVER", screenWidth / 2 - MeasureText("GAME OVER", 20) / 2, screenHeight / 2 - 20, 20, RED);
-                DrawText("Press SPACE to restart", screenWidth / 2 - MeasureText("Press SPACE to restart", 20) / 2, screenHeight / 2 + 20, 20, RED);
+                DrawText("Hold SPACE to restart", screenWidth / 2 - MeasureText("Press SPACE to restart", 20) / 2, screenHeight / 2 + 20, 20, RED);
             }
 
             // Display FPS
@@ -422,6 +407,7 @@ int main() {
             InitializeScene(); // Reset the scene
             gameOver = false;
             gamePaused = false;
+            score = 0;
         }
     }
     return 0;

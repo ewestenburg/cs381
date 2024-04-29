@@ -346,6 +346,11 @@ int main() {
 
     while(!window.ShouldClose() && keepRunning) {
         float deltaTime = window.GetFrameTime();
+
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            gamePaused = !gamePaused;  // Toggle the paused state
+        }
+
         if(!gamePaused){
             inputs.PollEvents();
             UpdatePhysics(transformStorage, kinematicsStorage, deltaTime);
@@ -407,15 +412,20 @@ int main() {
 
             camera.EndMode();
 
-            DrawText("Hold W to increase velocity", screenWidth - 325, 750, 20, BLACK);
+            DrawText("Hold W to increase velocity", screenWidth - 325, 650, 20, BLACK);
             DrawText("Hold S to Jump", screenWidth - 250, 700, 20, BLACK);
+            DrawText("Double Click Mouse to Pause", screenWidth - 325, 750, 20, BLACK);
 
             // Score display on the left corner
             DrawText(TextFormat("Score: %d", score), 10, 750, 20, BLACK);
 
-            if (gamePaused) {
+            if (gamePaused && gameOver) {
                 DrawText("GAME OVER", screenWidth / 2 - MeasureText("GAME OVER", 20) / 2, screenHeight / 2 - 20, 20, RED);
                 DrawText("Hold SPACE to restart", screenWidth / 2 - MeasureText("Press SPACE to restart", 20) / 2, screenHeight / 2 + 20, 20, RED);
+            }
+            else if(gamePaused) {
+                DrawText("Paused", screenWidth / 2 - MeasureText("GAME OVER", 20) / 2, screenHeight / 2 - 20, 20, RED);
+                DrawText("Double Click to continue", screenWidth / 2 - MeasureText("Press SPACE to restart", 20) / 2, screenHeight / 2 + 20, 20, RED);
             }
 
             // Display FPS

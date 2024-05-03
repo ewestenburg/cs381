@@ -36,7 +36,11 @@ Copy generated folder into build
 
 Copy models folder into build
 
-- cp -r generated models
+- cp -r models build
+
+Copy includeable.cmake into build
+
+- cp -r includable.cmake build
   
 Move into build folder
 

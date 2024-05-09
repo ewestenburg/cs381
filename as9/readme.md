@@ -40,7 +40,7 @@ Copy models folder into build
 
 Copy includeable.cmake into build
 
-- cp -r includable.cmake build
+- cp -r includeable.cmake build
   
 Move into build folder
 
@@ -53,7 +53,7 @@ Run cmake and make
 
 **How to run code:**
 
-After compile, there will be a resulting executable that can be run titled as6
+After compile, there will be a resulting executable that can be run titled as9
 
 - ./as9
 

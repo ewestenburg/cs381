@@ -19,3 +19,6 @@
 [submodule "as8/raylib-cpp"]
 	path = as8/raylib-cpp
 	url = https://github.com/joshuadahlunr/raylib-cpp.git	
+[submodule "godot-cpp20"]
+	path = godot-cpp20
+	url = https://github.com/hpcvis/godot-cpp20

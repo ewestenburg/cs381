@@ -1,0 +1,84 @@
+Eric Ashton Westenburg
+Cs 381 Assignment 12b
+QA Report
+
+Bug Report for AS9
+
+1. Extreme Latency
+
+Description
+Overall, the game runs with extreme lag which causes a choppy gameplay experience and makes it unable to play background music continuously.
+
+Steps to Reproduce
+Any iteration of the game
+
+Environment
+VMWare Workstation Linux Virtual Machine
+Most Recent Github Push
+
+Expected Results
+The expected result is that the game would run quicker and be able to play music without it cutting out.
+
+Actual Results
+The game runs at under 10 FPS. 
+
+Additional Notes/Attachments
+I expect the latency comes from inefficient physics calculations and redundant loading of the component vectors. The UpdatePhysics() and CheckCollisions() functions are getting called at every iteration of the main game loop and may contain inefficiencies that lead to the slow gameplay. 
+
+
+
+
+
+
+
+
+
+
+2. Incorrect scorekeeping on first jump
+
+Description
+At the start of the game, a point is awarded the first time you jump regardless of whether it is over an obstacle. This only occurs for the first jump. 
+
+Steps to Reproduce
+Start Game
+Jump immediately before reaching the first obstacle 
+A point will be awarded despite not jumping over an obstacle
+
+Environment
+VMWare Workstation Linux Virtual Machine
+Most Recent Push
+
+Expected Results
+The expected result is that no point is awarded until the player jumps over the first obstacle. 
+
+Actual Results
+A point is being awarded immediately once the player jumps for the first time. Then, no point is awarded when they jump over the first obstacle. 
+
+Additional Notes/Attachments
+A point was awarded despite not getting past the first obstacle. 
+
+
+
+
+3. Requires double click to successfully pause game
+
+Description
+Despite the code only calling for a single left mouse click to toggle the game pause state, it takes multiple clicks to successfully pause or unpause the game. 
+
+Steps to Reproduce
+While game is going, try to click mouse to pause
+It will take at least a double click to successfully pause
+
+Environment
+VMWare Workstation Linux Virtual Machine
+Most Recent Github Push
+
+Expected Results
+The expected result is that the game pauses or resumes once the mouse is clicked a single time.  
+
+Actual Results
+It requires multiple clicks for the game to accurately register the input and pause/unpause the game. 
+
+Additional Notes/Attachments
+The pause mechanic uses unbuffered input within the main game loop. 
+
